@@ -12,18 +12,12 @@ from PIL import Image
 import glob
 from pycocotools import mask as mask_utils
 
-# MMDetection imports - updated for MMDetection 3.x
 from mmengine.config import Config
 from mmengine.runner import Runner
 
-# from mmengine.logging import MMLogger # Runner handles logging setup
 
 from mmdet.apis import init_detector
 
-# TRANSFORMS registry might be needed if defining custom transforms
-# from mmdet.registry import TRANSFORMS
-# BoxType not typically needed directly
-# from mmdet.structures.bbox import BoxType
 from mmdet.utils import register_all_modules
 from visualizations import (
     visualize_dataset_examples,
@@ -46,9 +40,7 @@ def setup_seed(seed):
     # Check if CUDA is available before setting seed
     if torch.cuda.is_available():
         torch.cuda.manual_seed_all(seed)
-    # Add determinism flag if needed (can slow down training)
-    # torch.backends.cudnn.deterministic = True
-    # torch.backends.cudnn.benchmark = False
+
 
 
 def load_json(file_path):
@@ -61,7 +53,6 @@ def save_json(data, file_path):
     """Save data to a JSON file."""
     os.makedirs(os.path.dirname(file_path), exist_ok=True)  # Ensure dir exists
     with open(file_path, "w") as f:
-        # Use numpy encoder for compatibility if needed
         json.dump(data, f, indent=4, cls=NumpyEncoder)
 
 
@@ -106,9 +97,6 @@ def decode_rle_mask(rle_mask):
 
 def read_image(file_path):
     """Read image file and return as numpy array."""
-    # Use mmcv's imread for consistency
-    # return mmcv.imread(file_path)
-    # Or stick to PIL/OpenCV if preferred
     img = np.array(Image.open(file_path))
     # Ensure 3 channels if needed by the model (e.g., for grayscale)
     if len(img.shape) == 2:
@@ -125,7 +113,7 @@ def read_mask(file_path):
 
 
 # ------------------------------------------------------------------------------
-# Dataset Preparation (Mostly Unchanged - ensure COCO format is correct)
+# Dataset Preparation
 # ------------------------------------------------------------------------------
 
 
